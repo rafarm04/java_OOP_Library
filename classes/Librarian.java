@@ -61,7 +61,7 @@ public class Librarian {
         System.out.println("Book not found.");
     }
 
-    public Book findBookByTitle(String... optionalParams) { // Fixed parameter name
+    public Book findBook(String... optionalParams) { // Fixed parameter name
         String title = optionalParams.length > 0 ? optionalParams[0] : null;
         String author = optionalParams.length > 1 ? optionalParams[1] : null;
         String isbn = optionalParams.length > 2 ? optionalParams[2] : null;
@@ -87,7 +87,7 @@ public class Librarian {
 
     public void checkOutBook(int patronId, String bookTitle) {
         Patron patron = findPatronById(patronId);
-        Book book = findBookByTitle(bookTitle);
+        Book book = findBook(bookTitle);
 
         if (patron == null) {
             System.out.println("Patron not found.");
@@ -124,7 +124,7 @@ public class Librarian {
             return;
         }
 
-        Book libraryBook = findBookByTitle(bookTitle);
+        Book libraryBook = findBook(bookTitle);
         if (libraryBook == null) {
             System.out.println("Error: Book does not exist in library records.");
             return;
@@ -159,7 +159,24 @@ public class Librarian {
         System.out.println("Patron not found.");
     }
 
-    public void booksPerPatron(){
+    public void booksPerPatron() {
+        if (patrons.isEmpty()) {
+            System.out.println("No registered patrons.");
+            return;
+        }
 
+        System.out.println("\n===== Books Checked Out Per Patron =====");
+        for (Patron patron : patrons) {
+            System.out.println("Patron: " + patron.getName() + " (ID: " + patron.getId() + ")");
+            
+            List<Book> borrowedBooks = patron.getBorrowedBooks();
+            if (borrowedBooks.isEmpty()) {
+                System.out.println("   No books checked out.");
+            } else {
+                for (Book book : borrowedBooks) {
+                    System.out.println("   - " + book.getTitle() + " by " + book.getAuthor());
+                }
+            }
+        }
     }
 }
