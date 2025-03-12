@@ -11,7 +11,7 @@ public class Librarian {
      
     
     //Functions
-    public void displayBooks(List<Book> books){
+    public void displayBooks(){
         for (Book book : books) {
             book.displayBook();
         }
@@ -49,6 +49,20 @@ public class Librarian {
         System.out.println("The book doesn't exist or the quantity wanted to remove is a lot.");
     }
 
+    public void editBook(){
+
+    }
+
+    public Book findBookByTitle(String title){
+        for (Book book : books){
+            if (book.getTitle().equals(title)){
+                return book;
+            }
+        }
+        // If it does'nt find a book then returns null
+        return null;
+    }
+
     public void regPatrons(String name, String contact, int id){
         Patron newPatron = new Patron(name, contact, id);
         patrons.add(newPatron);
@@ -58,5 +72,9 @@ public class Librarian {
         for (Patron patron : patrons) {
             patron.displayPatron();
         }
+    }
+
+    public void editPatron(){
+        
     }
 }
