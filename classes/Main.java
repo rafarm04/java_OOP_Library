@@ -17,7 +17,8 @@ public class Main {
             System.out.println("6. View Patrons");
             System.out.println("7. Check Out Book");
             System.out.println("8. Return Book");
-            System.out.println("9. Exit");
+            System.out.println("9. Books Per Patron");
+            System.out.println("10. Exit");
             System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
@@ -70,7 +71,7 @@ public class Main {
                     String isbn_1 = scanner.nextLine();
                     isbn_1 = isbn_1.isEmpty() ? "" : isbn_1;
 
-                    Book foundBook = librarian.findBookByTitle(title_1, author_1, isbn_1);
+                    Book foundBook = librarian.findBook(title_1, author_1, isbn_1);
                     if(foundBook != null){
                         System.out.println("Book Found:");
                         foundBook.displayBook();
@@ -112,7 +113,11 @@ public class Main {
                     librarian.returnBook(patronId, title);
                     break;
 
-                case 9: // Exit
+                case 9: // View Books Checked Out Per Patron
+                    librarian.booksPerPatron();
+                    break;
+
+                case 10: // Exit
                     System.out.println("Exiting Library System. Goodbye!");
                     scanner.close();
                     return;
