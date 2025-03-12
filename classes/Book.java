@@ -28,7 +28,24 @@ public class Book {
         return isbn;
     }
 
-    //Function
+    //Setters
+    public void setTitle(String title){
+        this.title = title;
+    }
+
+    public void setAuthor(String author){
+        this.author = author;
+    }
+
+    public void setQuantity(int quant){
+        this.quantity = quant;
+    }
+
+    public void setISBN(String isbn){
+        this.isbn = isbn;
+    }
+
+    //Functions
     public void displayBook(){
         System.out.println("Book: " + title + "\nAuthor: " + author + "\nISBN: " + isbn + "\tQuantity: " + quantity);
     }

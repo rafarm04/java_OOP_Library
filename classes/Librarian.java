@@ -17,51 +17,124 @@ public class Librarian {
         }
     }
 
-    public void addBook(String title, String author, int quantity, String isbn){
+    public void addBook(String title, String author, int quantity, String isbn) {
         for (Book book : books) {
-            //If we find a book that's already in the list than just augment the quantity
-            if(book.getTitle().equals(title)){
-                book.newQuantity(quantity);
-            }
-            else{
-                Book newBook = new Book(title, author, quantity, isbn);
-                books.add(newBook);
-                break;
+            if (book.getTitle().equals(title)) {
+                book.newQuantity(quantity); // If book exists, update quantity
+                return;
             }
         }
+        books.add(new Book(title, author, quantity, isbn)); // If book doesn't exist, add it
     }
 
-    public void removeBook(String title, String author, int quantity, String isbn){
+
+    public void removeBook(String title, String author, int quantity, String isbn) {
         for (Book book : books) {
-            //If we find a book that's already in the list 
-            if(book.getTitle().equals(title)){
-                //If the quantity of books that we want to remove is less or equal to the quantity of books we have than we remove them
-                if(book.getQuantity() >= quantity){
+            if (book.getTitle().equals(title)) {
+                if (book.getQuantity() >= quantity) {
                     book.removeQuantity(quantity);
-                    if(book.getQuantity() == 0){
+                    if (book.getQuantity() == 0) {
                         books.remove(book);
                     }
-                    break;
+                    return; // Exit after removing the book
+                } else {
+                    System.out.println("Not enough books available.");
+                    return;
                 }
             }
         }
-        //We didn't find the book
-        System.out.println("The book doesn't exist or the quantity wanted to remove is a lot.");
+        System.out.println("Book not found.");
     }
 
-    public void editBook(){
 
+    public void editBook(String title, String newTitle, String newAuthor, int newQuantity, String newIsbn) {
+        for (Book book : books) {
+            if (book.getTitle().equals(title)) {
+                book.setTitle(newTitle);
+                book.setAuthor(newAuthor);
+                book.setQuantity(newQuantity);
+                book.setISBN(newIsbn);
+                System.out.println("Book updated successfully.");
+                return;
+            }
+        }
+        System.out.println("Book not found.");
     }
 
-    public Book findBookByTitle(String title){
-        for (Book book : books){
-            if (book.getTitle().equals(title)){
+    public Book findBookByTitle(String... optionalParams) { // Fixed parameter name
+        String title = optionalParams.length > 0 ? optionalParams[0] : null;
+        String author = optionalParams.length > 1 ? optionalParams[1] : null;
+        String isbn = optionalParams.length > 2 ? optionalParams[2] : null;
+
+        for (Book book : books) {
+            if ((title != null && book.getTitle().equals(title)) ||
+                (author != null && book.getAuthor().equals(author)) ||
+                (isbn != null && book.getISBN().equals(isbn))) {
                 return book;
             }
         }
-        // If it does'nt find a book then returns null
         return null;
     }
+
+    public Patron findPatronById(int id) {
+        for (Patron patron : patrons) {
+            if (patron.getId() == id) {
+                return patron;
+            }
+        }
+        return null;
+    }
+
+    public void checkOutBook(int patronId, String bookTitle) {
+        Patron patron = findPatronById(patronId);
+        Book book = findBookByTitle(bookTitle);
+
+        if (patron == null) {
+            System.out.println("Patron not found.");
+            return;
+        }
+        if (book == null || book.getQuantity() == 0) {
+            System.out.println("Book not available.");
+            return;
+        }
+
+        // Reduce book quantity and add it to patron's list
+        book.removeQuantity(1);
+        patron.checkOutBook(book);
+        System.out.println(patron.getName() + " checked out " + book.getTitle());
+    }
+
+    public void returnBook(int patronId, String bookTitle) {
+        Patron patron = findPatronById(patronId);
+        if (patron == null) {
+            System.out.println("Patron not found.");
+            return;
+        }
+
+        Book bookToReturn = null;
+        for (Book book : patron.getBorrowedBooks()) {  // Check patron's books
+            if (book.getTitle().equalsIgnoreCase(bookTitle)) {
+                bookToReturn = book;
+                break;
+            }
+        }
+
+        if (bookToReturn == null) {
+            System.out.println("Patron did not borrow this book.");
+            return;
+        }
+
+        Book libraryBook = findBookByTitle(bookTitle);
+        if (libraryBook == null) {
+            System.out.println("Error: Book does not exist in library records.");
+            return;
+        }
+
+        libraryBook.newQuantity(1);
+        patron.returnBook(bookToReturn);
+        System.out.println(patron.getName() + " returned " + bookTitle);
+    }
+
 
     public void regPatrons(String name, String contact, int id){
         Patron newPatron = new Patron(name, contact, id);
@@ -74,7 +147,19 @@ public class Librarian {
         }
     }
 
-    public void editPatron(){
-        
+    public void editPatron(int id, String newName, String newContact) {
+        for (Patron patron : patrons) {
+            if (patron.getId() == id) {
+                patron.setName(newName);
+                patron.setContact(newContact);
+                System.out.println("Patron updated successfully.");
+                return;
+            }
+        }
+        System.out.println("Patron not found.");
+    }
+
+    public void booksPerPatron(){
+
     }
 }
