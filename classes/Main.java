@@ -42,14 +42,9 @@ public class Main {
                 case 2: // Remove Book
                     System.out.print("Enter title: ");
                     title = scanner.nextLine();
-                    System.out.print("Enter author: ");
-                    author = scanner.nextLine();
                     System.out.print("Enter quantity to remove: ");
                     quantity = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
-                    System.out.print("Enter ISBN: ");
-                    isbn = scanner.nextLine();
-                    librarian.removeBook(title, author, quantity, isbn);
+                    librarian.removeBook(title, quantity);
                     break;
 
                 case 3: // View Books
